@@ -450,7 +450,7 @@ class Qwen3ForcedAligner:
         results: List[ForcedAlignResult] = []
         for input_id, output_id, word_list in zip(inputs["input_ids"], output_ids, word_lists):
             masked_output_id = output_id[input_id == self.timestamp_token_id]
-            timestamp_ms = (masked_output_id * self.timestamp_segment_time).to("cpu").numpy()
+            timestamp_ms = (masked_output_id * self.timestamp_segment_time).to(self.model.device).numpy()
             timestamp_output = self.aligner_processor.parse_timestamp(word_list, timestamp_ms)
             for it in timestamp_output:
                 it['start_time'] = round(it['start_time'] / 1000.0, 3)
